@@ -17,30 +17,51 @@ function DetailView() {
       })
   }, [movieId])
 
-  if (!movie) return <div>Loading...</div>
+  if (!movie) return <div className="loading">Loading...</div>
 
   return (
     <div className="movie-detail">
       <h2>{movie.title}</h2>
-      <img src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`} alt={movie.title} />
-      <ul>
-        <li>Release Date: {movie.release_date}</li>
-        <li>Runtime: {movie.runtime} min</li>
-        <li>Rating: {movie.vote_average}</li>
-        <li>Genres: {movie.genres.map(g => g.name).join(', ')}</li>
-        <li>Overview: {movie.overview}</li>
-        <li>Budget: ${movie.budget}</li>
-        <li>Revenue: ${movie.revenue}</li>
-      </ul>
+      <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+      <div className="movie-detail-info">
+        <ul>
+          <li>
+            <strong>Release Date</strong>
+            <span>{movie.release_date}</span>
+          </li>
+          <li>
+            <strong>Runtime</strong>
+            <span>{movie.runtime} minutes</span>
+          </li>
+          <li>
+            <strong>Rating</strong>
+            <span>{movie.vote_average.toFixed(1)} / 10</span>
+          </li>
+          <li>
+            <strong>Genres</strong>
+            <span>{movie.genres.map(g => g.name).join(', ')}</span>
+          </li>
+          <li>
+            <strong>Overview</strong>
+            <span>{movie.overview}</span>
+          </li>
+          <li>
+            <strong>Budget</strong>
+            <span>${movie.budget.toLocaleString()}</span>
+          </li>
+          <li>
+            <strong>Revenue</strong>
+            <span>${movie.revenue.toLocaleString()}</span>
+          </li>
+        </ul>
+      </div>
       {trailer && (
         <div className="trailer">
           <iframe
-            width="560"
-            height="315"
             src={`https://www.youtube.com/embed/${trailer.key}`}
             title="YouTube trailer"
             frameBorder="0"
-            allow="autoplay; encrypted-media"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>

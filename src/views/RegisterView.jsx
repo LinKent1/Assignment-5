@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function RegisterView() {
   const [form, setForm] = useState({
@@ -8,6 +9,8 @@ function RegisterView() {
     password: '',
     confirmPassword: ''
   })
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -16,16 +19,31 @@ function RegisterView() {
   const handleSubmit = e => {
     e.preventDefault()
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match!')
+      setError('Passwords do not match!')
       return
     }
-    // Add your register logic here
-    alert('Register not implemented')
+    const users = JSON.parse(localStorage.getItem('users')) || []
+    if (users.find(u => u.email === form.email)) {
+      setError('Email already registered')
+      return
+    }
+    const newUser = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      password: form.password
+    }
+    users.push(newUser)
+    localStorage.setItem('users', JSON.stringify(users))
+    setError('')
+    alert('Registration successful! Please login.')
+    navigate('/login')
   }
 
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <h2>Register</h2>
+      {error && <p className="error">{error}</p>}
       <input type="text" name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} required />
       <input type="text" name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
       <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
